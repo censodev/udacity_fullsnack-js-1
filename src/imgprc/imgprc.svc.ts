@@ -2,6 +2,7 @@ import sharp from 'sharp'
 import cache from './cache.svc'
 
 interface IImgPrcService {
+  fetch: (url: string) => Promise<Buffer | undefined>
   resize: (
     buffer: Buffer,
     filename: string,
@@ -18,6 +19,16 @@ class ImgPrcService implements IImgPrcService {
     height: number
   ): Promise<Buffer> {
     return await sharp(buffer).resize(width, height).toBuffer()
+  }
+
+  async fetch(url: string): Promise<Buffer | undefined> {
+    try {
+      const fimg = await fetch(new URL(url))
+      return Buffer.from(await fimg.arrayBuffer())
+    } catch (error) {
+      console.error(error)
+    }
+    return undefined
   }
 }
 
@@ -41,6 +52,10 @@ class ImgPrcProxyService implements IImgPrcService {
     )
     cache.cache(key, outputBuffer)
     return outputBuffer
+  }
+
+  async fetch(url: string): Promise<Buffer | undefined> {
+    return await this._service.fetch(url)
   }
 
   genCacheKey(filename: string, width: number, height: number): string {

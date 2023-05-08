@@ -1,14 +1,10 @@
-const checkNumAndParse = (
-  val: string | undefined,
-  errHandler: () => {}
-): number => {
+const checkNumAndParse = (val: string | undefined): number | undefined => {
   try {
-    if (val === undefined) throw new Error()
-    return parseInt(val)
+    return val === undefined ? val : parseInt(val)
   } catch (error) {
-    errHandler()
+    console.error(error)
+    return undefined
   }
-  return 0
 }
 
 export default { checkNumAndParse }

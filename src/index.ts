@@ -13,32 +13,44 @@ const port = 3000
 const imgprcService: IImgPrcService = buildImgPrcService()
 
 app.get('/imgprc', async (req, res) => {
-  const width: number = validator.checkNumAndParse(
-    req.query.width?.toString(),
-    () =>
-      res.json({
-        err: 'param "width" is invalid'
-      })
+  const width: number | undefined = validator.checkNumAndParse(
+    req.query.width?.toString()
   )
-  const height: number = validator.checkNumAndParse(
-    req.query.height?.toString(),
-    () =>
-      res.json({
-        err: 'param "height" is invalid'
-      })
+  if (width === undefined) {
+    res.json({
+      err: 'param "width" is invalid'
+    })
+    return
+  }
+  const height: number | undefined = validator.checkNumAndParse(
+    req.query.height?.toString()
   )
+  if (height === undefined) {
+    res.json({
+      err: 'param "height" is invalid'
+    })
+    return
+  }
   if (req.query.filename === undefined || req.query.filename === '') {
     res.json({
       err: 'param "filename" is invalid'
     })
+    return
   }
   if (req.query.url === undefined || req.query.url === '') {
     res.json({
       err: 'param "url" is invalid'
     })
+    return
   }
-  const fimg = await fetch(`${req.query.url?.toString() ?? ''}`)
-  const fimgb = Buffer.from(await fimg.arrayBuffer())
+  const fimgb = await imgprcService.fetch(`${req.query.url?.toString() ?? ''}`)
+  if (fimgb === undefined) {
+    res.json({
+      err: 'param "url" is invalid'
+    })
+    return
+  }
+
   const reesizedImg: Buffer = await imgprcService.resize(
     fimgb,
     `${req.query.filename?.toString() ?? ''}`,
