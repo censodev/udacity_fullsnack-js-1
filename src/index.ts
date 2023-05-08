@@ -18,7 +18,7 @@ app.get('/imgprc', async (req, res) => {
   )
   if (width === undefined) {
     res.json({
-      err: 'param "width" is invalid'
+      err: 'width is invalid'
     })
     return
   }
@@ -27,26 +27,26 @@ app.get('/imgprc', async (req, res) => {
   )
   if (height === undefined) {
     res.json({
-      err: 'param "height" is invalid'
+      err: 'height is invalid'
     })
     return
   }
   if (req.query.filename === undefined || req.query.filename === '') {
     res.json({
-      err: 'param "filename" is invalid'
+      err: 'filename is invalid'
     })
     return
   }
   if (req.query.url === undefined || req.query.url === '') {
     res.json({
-      err: 'param "url" is invalid'
+      err: 'image url is invalid'
     })
     return
   }
   const fimgb = await imgprcService.fetch(`${req.query.url?.toString() ?? ''}`)
   if (fimgb === undefined) {
     res.json({
-      err: 'param "url" is invalid'
+      err: 'cannot process image with provided url'
     })
     return
   }
