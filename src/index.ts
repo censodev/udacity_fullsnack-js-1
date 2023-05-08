@@ -1,11 +1,16 @@
 import express from 'express'
-import imgprcService from './imgprc/imgprc.svc'
+import {
+  type IImgPrcService,
+  build as buildImgPrcService
+} from './imgprc/imgprc.svc'
 import stream from 'stream'
 import validator from './utils/validator'
-import fetch from 'node-fetch'
+// import fetch from 'node-fetch'
 
 const app = express()
 const port = 3000
+
+const imgprcService: IImgPrcService = buildImgPrcService()
 
 app.get('/imgprc', async (req, res) => {
   const width: number = validator.checkNumAndParse(
