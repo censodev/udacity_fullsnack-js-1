@@ -1,12 +1,12 @@
-import sharp from "sharp";
+import sharp from 'sharp'
 
 const resize = async (
   inputBuffer: Buffer | undefined,
   ...wh: number[]
 ): Promise<Buffer> => {
-  return sharp(inputBuffer)
+  return await sharp(inputBuffer)
     .resize(...wh)
-    .toBuffer();
-};
+    .toBuffer()
+}
 
-export default { resize };
+export default { resize }
